@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import '../../Global/constant.dart';
 import '../../Global/functions.dart';
 
-
 class MusicSettings extends StatefulWidget {
   const MusicSettings({Key? key}) : super(key: key);
 
@@ -17,30 +16,45 @@ class MusicSettings extends StatefulWidget {
 class _MusicSettingsState extends State<MusicSettings> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      child: Column(
-        children: [
-          Container(margin: EdgeInsets.symmetric(vertical: 10),
-              child: myText("Music",Colors.black,20),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              GestureDetector(onTap: () async {
-                write("audio", true);
-                await player.resume();
-              },
-                  child: Icon(Icons.music_note_rounded,size: 40,)),
-              GestureDetector(onTap: () async {
-                write("audio", false);
-                await player.pause();
-              },
-                  child: Icon(Icons.music_off_rounded,size: 40)),
-            ],
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              child: myText("Music", Colors.black, 20),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 70,
+              margin: EdgeInsets.symmetric(vertical: 10),
+              child: myText(
+                  read("audio") ? "Music On" : "Music Off", Colors.black, 16),
+            ),
+            Switch(
+                value: read("audio"),
+                activeColor: Colors.black,
+                inactiveThumbColor: Colors.grey.shade500,
+                inactiveTrackColor: Colors.grey.shade100,
+                onChanged: (v) async {
+                  if (v) {
+                    write("audio", true);
+                    await player.resume();
+                    setState(() {});
+                  } else {
+                    write("audio", false);
+                    await player.pause();
+                    setState(() {});
+                  }
+                }),
+          ],
+        )
+      ],
     );
   }
 }

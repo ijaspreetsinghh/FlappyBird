@@ -2,7 +2,6 @@
 import 'package:flappy_bird/Layouts/Pages/page_game.dart';
 import 'package:flappy_bird/Layouts/Pages/page_settings.dart';
 import 'package:flutter/material.dart';
-import '../Layouts/Pages/page_rate_us.dart';
 import '../Layouts/Pages/page_start_screen.dart';
 import '../Resources/strings.dart';
 
@@ -15,8 +14,7 @@ class AppRoute {
         );
       case Str.gamePage:
         return MaterialPageRoute(builder: (_) => GamePage());
-      case Str.rateUs:
-        return MaterialPageRoute(builder: (_) => RateUs());
+
       case Str.settings:
         return MaterialPageRoute(builder: (_) => Settings());
       default:

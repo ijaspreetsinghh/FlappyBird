@@ -4,6 +4,7 @@ import 'package:flappy_bird/Resources/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
+import 'package:share_plus/share_plus.dart';
 import '../../Global/constant.dart';
 import '../../Global/functions.dart';
 import '../Widgets/widget_gradient_button.dart';
@@ -127,17 +128,29 @@ Column _buttons() {
             ),
             page: Str.settings,
           ),
-          Button(
-            buttonType: "icon",
-            height: 50,
-            width: 100,
-            icon: Icon(
-              Icons.star,
-              size: 28,
-              color: Colors.orange,
-            ),
-            page: Str.rateUs,
-          ),
+          InkWell(
+            child: Container(
+                width: 100,
+                height: 50,
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: Colors.black),
+                ),
+                alignment: Alignment.center,
+                child: Icon(
+                  Icons.share_rounded,
+                  size: 28,
+                  color: Colors.blue.shade300,
+                )),
+            onTap: () {
+              Share.share(
+                  "Hey look! I found this amazing game. Let's play it together. Follow this link https://jsdev.page.link/flappyBird",
+                  subject:
+                      "Hey look! I found this amazing game. Let's play it together.");
+            },
+          )
         ],
       ),
     ],

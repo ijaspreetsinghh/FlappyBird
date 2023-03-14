@@ -177,21 +177,41 @@ class _GamePageState extends State<GamePage> {
               flex: 1,
               child: Container(
                 color: Colors.brown,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "Score : $score",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontFamily: "DiloWorld"),
-                    ), // Best TEXT
-                    Text("Best : $topScore",
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontFamily: "DiloWorld")),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Score : $score",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontFamily: "DiloWorld"),
+                        ), // Best TEXT
+                        Text("Best : $topScore",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontFamily: "DiloWorld")),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          "Difficulty : ${read('level') == 0.05 ? 'Easy' : read('level') == 0.08 ? 'Medium' : 'Hard'} ",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontFamily: "DiloWorld"),
+                        ), // Best TEXT
+                      ],
+                    ),
                   ],
                 ),
               ),
