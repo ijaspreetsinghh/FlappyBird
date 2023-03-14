@@ -38,7 +38,7 @@ class BirdSettings extends StatelessWidget {
                   ),
                   child: Image.asset(
                     "assets/pics/bird.png",
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
@@ -60,7 +60,7 @@ class BirdSettings extends StatelessWidget {
                   ),
                   child: Image.asset(
                     "assets/pics/blue.png",
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
@@ -82,7 +82,7 @@ class BirdSettings extends StatelessWidget {
                   ),
                   child: Image.asset(
                     "assets/pics/green.png",
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),

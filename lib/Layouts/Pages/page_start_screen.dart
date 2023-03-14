@@ -79,10 +79,10 @@ class _StartScreenState extends State<StartScreen> {
                 ),
               ],
             ),
-            // SizedBox(
-            //   height: 32,
-            // ),
-            // adContainer,
+            SizedBox(
+              height: 32,
+            ),
+            adContainer,
           ],
         ),
       ),

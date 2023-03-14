@@ -73,7 +73,12 @@ void init() {
     write("audio", play);
   }
   if (play) {
-    player.play(AssetSource("audio/Tintin.mp3"));
+    player.play(
+      AssetSource(
+        "audio/Tintin.mp3",
+      ),
+      mode: PlayerMode.lowLatency,
+    );
   } else {
     player.stop();
   }

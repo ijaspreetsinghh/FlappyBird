@@ -12,12 +12,13 @@ class Bird extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return AnimatedContainer(
-      alignment: Alignment(0, (2 * yAxis + birdHeight) / (2- birdHeight)),
+      alignment: Alignment(0, (2 * yAxis + birdHeight) / (2 - birdHeight)),
       duration: Duration(milliseconds: 0),
-      child: Image.asset(Str.bird,
+      child: Image.asset(
+        Str.bird,
         width: size.width * birdWidth,
         height: size.height * birdHeight,
-        fit: BoxFit.cover,
+        fit: BoxFit.contain,
       ),
     );
   }
