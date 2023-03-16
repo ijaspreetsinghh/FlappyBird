@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="dev.jaspreetsingh.flappybird">
    <application
-        android:label="FlappyBird"
+        android:label="Super Bird"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
          <meta-data

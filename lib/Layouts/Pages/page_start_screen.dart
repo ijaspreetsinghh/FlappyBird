@@ -63,7 +63,7 @@ class _StartScreenState extends State<StartScreen> {
                     margin: EdgeInsets.only(
                         top: size.height * 0.15, left: 16, right: 16),
                     child:
-                        myText("FlappyBird".toUpperCase(), Colors.white, 40)),
+                        myText("Super Bird".toUpperCase(), Colors.white, 40)),
               ],
             ),
             Bird(yAxis, birdWidth, birdHeight),

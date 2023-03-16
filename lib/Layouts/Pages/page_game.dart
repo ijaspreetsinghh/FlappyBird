@@ -28,7 +28,7 @@ class _GamePageState extends State<GamePage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              myText("Game Over", Colors.blue[900], 35),
+              myText("Exit Game?", Colors.blue[900], 35),
             ],
           ),
           actionsPadding: EdgeInsets.only(right: 8, bottom: 8),
@@ -131,6 +131,15 @@ class _GamePageState extends State<GamePage> {
   void initState() {
     retryLeft = 3;
     _createRewardedAd();
+    setState(() {
+      yAxis = 0;
+      gameHasStarted = false;
+      time = 0;
+      score = 0;
+      initialHeight = yAxis;
+      barrierX[0] = 2;
+      barrierX[1] = 3.4;
+    });
     super.initState();
   }
 
@@ -297,7 +306,6 @@ class _GamePageState extends State<GamePage> {
   }
 
   void resetGame() {
-    Navigator.pop(context);
     setState(() {
       yAxis = 0;
       gameHasStarted = false;
@@ -307,6 +315,7 @@ class _GamePageState extends State<GamePage> {
       barrierX[0] = 2;
       barrierX[1] = 3.4;
     });
+    Navigator.pop(context);
   }
 
   void onAdViewClick() {
