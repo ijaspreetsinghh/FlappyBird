@@ -50,33 +50,25 @@ class _SettingsState extends State<Settings> {
 
   void _showRewardedInterstitialAd() {
     if (_rewardedInterstitialAd == null) {
-      debugPrint(
-          'Warning: attempt to show rewarded interstitial before loaded.');
       return;
     }
     _rewardedInterstitialAd!.fullScreenContentCallback =
         FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedInterstitialAd ad) =>
-          debugPrint('$ad onAdShowedFullScreenContent.'),
+      onAdShowedFullScreenContent: (RewardedInterstitialAd ad) {},
       onAdDismissedFullScreenContent: (RewardedInterstitialAd ad) {
-        debugPrint('$ad onAdDismissedFullScreenContent.');
         ad.dispose();
         _createRewardedInterstitialAd();
       },
       onAdFailedToShowFullScreenContent:
           (RewardedInterstitialAd ad, AdError error) {
-        debugPrint('$ad onAdFailedToShowFullScreenContent: $error');
         ad.dispose();
         _createRewardedInterstitialAd();
       },
     );
 
     _rewardedInterstitialAd!.setImmersiveMode(true);
-    _rewardedInterstitialAd!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-      debugPrint(
-          '$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
-    });
+    _rewardedInterstitialAd!
+        .show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {});
     _rewardedInterstitialAd = null;
   }
 
@@ -148,12 +140,7 @@ class _SettingsState extends State<Settings> {
                               backgroundColor: Colors.black,
                               padding: EdgeInsets.symmetric(vertical: 10)),
                           onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => StartScreen(),
-                              ),
-                            );
+                            Get.offAll(() => StartScreen());
                             _showRewardedInterstitialAd();
                           },
                           child: myText("Apply", Colors.white, 32)),

@@ -2,18 +2,15 @@
 
 import 'package:flappy_bird/Database/database.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../Global/constant.dart';
 import '../../Global/functions.dart';
 
-class MusicSettings extends StatefulWidget {
-  const MusicSettings({Key? key}) : super(key: key);
+class MusicSettings extends StatelessWidget {
+  MusicSettings({Key? key}) : super(key: key);
+  final GameState gameState = Get.put(GameState());
 
-  @override
-  State<MusicSettings> createState() => _MusicSettingsState();
-}
-
-class _MusicSettingsState extends State<MusicSettings> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -36,22 +33,22 @@ class _MusicSettingsState extends State<MusicSettings> {
               child: myText(
                   read("audio") ? "Music On" : "Music Off", Colors.black, 16),
             ),
-            Switch(
-                value: read("audio"),
+            Obx(() => Switch(
+                value: gameState.audio.value,
                 activeColor: Colors.black,
                 inactiveThumbColor: Colors.grey.shade500,
                 inactiveTrackColor: Colors.grey.shade100,
                 onChanged: (v) async {
                   if (v) {
                     write("audio", true);
+                    gameState.audio.value = true;
                     await player.resume();
-                    setState(() {});
                   } else {
                     write("audio", false);
+                    gameState.audio.value = false;
                     await player.pause();
-                    setState(() {});
                   }
-                }),
+                })),
           ],
         )
       ],

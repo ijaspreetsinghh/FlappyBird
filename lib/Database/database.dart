@@ -2,9 +2,9 @@
 
 import 'package:hive_flutter/hive_flutter.dart';
 
-void write(String id, dynamic value) async{
+void write(String id, dynamic value) async {
   final myBox = Hive.box('user');
-  switch(id){
+  switch (id) {
     case "score":
       myBox.put("score", value);
       break;
@@ -13,7 +13,7 @@ void write(String id, dynamic value) async{
       break;
     case "bird":
       myBox.put("bird", value);
-      print("bird is Activated");
+
       break;
     case "level":
       myBox.put("level", value);
@@ -24,10 +24,10 @@ void write(String id, dynamic value) async{
   }
 }
 
-dynamic read(String id){
+dynamic read(String id) {
   final myBox = Hive.box('user');
   dynamic value;
-  switch(id){
+  switch (id) {
     case "score":
       value = myBox.get("score");
       break;

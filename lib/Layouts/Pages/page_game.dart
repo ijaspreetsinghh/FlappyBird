@@ -17,6 +17,7 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
+  final GameState gameState = Get.put(GameState());
   Future<bool> canGoBack() async {
     Get.dialog(
         Dialog(
@@ -68,12 +69,10 @@ class _GamePageState extends State<GamePage> {
         request: AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {
-            print('$ad loaded.');
             _rewardedAd = ad;
             _numRewardedLoadAttempts = 0;
           },
           onAdFailedToLoad: (LoadAdError error) {
-            print('RewardedAd failed to load: $error');
             _rewardedAd = null;
             _numRewardedLoadAttempts += 1;
             if (_numRewardedLoadAttempts < maxFailedLoadAttempts) {
@@ -86,13 +85,11 @@ class _GamePageState extends State<GamePage> {
 
   void _showRewardedAd() {
     if (_rewardedAd == null) {
-      print('Warning: attempt to show rewarded before loaded.');
       resetGame();
       return;
     }
     _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (RewardedAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
+      onAdShowedFullScreenContent: (RewardedAd ad) {},
       onAdDismissedFullScreenContent: (RewardedAd ad) {
         hideOverlay(); // dismisses the alert dialog
 
@@ -112,7 +109,6 @@ class _GamePageState extends State<GamePage> {
         _createRewardedAd();
       },
       onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-        print('$ad onAdFailedToShowFullScreenContent: $error');
         resetGame();
         ad.dispose();
         _createRewardedAd();
@@ -120,10 +116,8 @@ class _GamePageState extends State<GamePage> {
     );
 
     _rewardedAd!.setImmersiveMode(true);
-    _rewardedAd!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-      print('$ad with reward $RewardItem(${reward.amount}, ${reward.type})');
-    });
+    _rewardedAd!
+        .show(onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {});
     _rewardedAd = null;
   }
 
@@ -160,32 +154,34 @@ class _GamePageState extends State<GamePage> {
           body: Column(children: [
             Expanded(
               flex: 3,
-              child: Container(
-                decoration: background(Str.image),
-                child: Stack(
-                  children: [
-                    Obx(() => Bird(yAxis.value, birdWidth, birdHeight)),
-                    // Tap to play text
-                    Obx(
-                      () => Container(
-                        alignment: Alignment(0, -0.3),
-                        child: myText(
-                            gameHasStarted.value ? '' : 'TAP TO START',
-                            Colors.white,
-                            25),
+              child: Obx(
+                () => Container(
+                  decoration: background(gameState.theme.value),
+                  child: Stack(
+                    children: [
+                      Obx(() => Bird(yAxis.value, birdWidth, birdHeight)),
+                      // Tap to play text
+                      Obx(
+                        () => Container(
+                          alignment: Alignment(0, -0.3),
+                          child: myText(
+                              gameHasStarted.value ? '' : 'TAP TO START',
+                              Colors.white,
+                              25),
+                        ),
                       ),
-                    ),
-                    Obx(() => Barrier(barrierHeight[0][0], barrierWidth.value,
-                        barrierX[0], true)),
-                    Obx(
-                      () => Barrier(barrierHeight[0][1], barrierWidth.value,
-                          barrierX[0], false),
-                    ),
-                    Obx(() => Barrier(barrierHeight[1][0], barrierWidth.value,
-                        barrierX[1], true)),
-                    Obx(() => Barrier(barrierHeight[1][1], barrierWidth.value,
-                        barrierX[1], false)),
-                  ],
+                      Obx(() => Barrier(barrierHeight[0][0], barrierWidth.value,
+                          barrierX[0], true)),
+                      Obx(
+                        () => Barrier(barrierHeight[0][1], barrierWidth.value,
+                            barrierX[0], false),
+                      ),
+                      Obx(() => Barrier(barrierHeight[1][0], barrierWidth.value,
+                          barrierX[1], true)),
+                      Obx(() => Barrier(barrierHeight[1][1], barrierWidth.value,
+                          barrierX[1], false)),
+                    ],
+                  ),
                 ),
               ),
             ),

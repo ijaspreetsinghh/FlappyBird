@@ -4,7 +4,10 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
 
 class GameState extends GetxController {
+  RxDouble level = 0.05.obs;
   RxString bird = 'assets/pics/bird.png'.obs;
+  RxString theme = '0'.obs;
+  RxBool audio = true.obs;
 }
 
 /// SCORE Variables calculated in function [startGame] in [GamePage]

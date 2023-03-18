@@ -3,12 +3,13 @@
 import 'package:flappy_bird/Database/database.dart';
 import 'package:flappy_bird/Global/functions.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../Global/constant.dart';
 
 class DifficultySettings extends StatelessWidget {
-  const DifficultySettings({Key? key}) : super(key: key);
-
+  DifficultySettings({Key? key}) : super(key: key);
+  final GameState gameState = Get.put(GameState());
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,58 +20,58 @@ class DifficultySettings extends StatelessWidget {
           Container(
               margin: EdgeInsets.symmetric(vertical: 10),
               child: myText("Difficulty", Colors.black, 20)),
-          StatefulBuilder(builder: (context, setState) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Obx(() => Container(
+                    padding: EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: gameState.level.value == 0.05
+                              ? Colors.black
+                              : Colors.transparent,
+                          width: 2),
+                    ),
+                    child: gameButton(() {
+                      barrierMovement = 0.05;
+                      gameState.level.value = barrierMovement;
+                      write("level", barrierMovement);
+                    }, "Easy", Colors.green.shade800),
+                  )),
+              Obx(
+                () => Container(
                   padding: EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     border: Border.all(
-                        color: read('level') == 0.05
-                            ? Colors.black
-                            : Colors.transparent,
-                        width: 2),
-                  ),
-                  child: gameButton(() {
-                    barrierMovement = 0.05;
-                    write("level", barrierMovement);
-                    setState(() {});
-                  }, "Easy", Colors.green.shade800),
-                ),
-                Container(
-                  padding: EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: read('level') == 0.08
+                        color: gameState.level.value == 0.08
                             ? Colors.black
                             : Colors.transparent,
                         width: 2),
                   ),
                   child: gameButton(() {
                     barrierMovement = 0.08;
+                    gameState.level.value = barrierMovement;
                     write("level", barrierMovement);
-                    setState(() {});
                   }, "Medium", Colors.yellow.shade800),
                 ),
-                Container(
-                  padding: EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: read('level') == 0.1
-                            ? Colors.black
-                            : Colors.transparent,
-                        width: 2),
-                  ),
-                  child: gameButton(() {
-                    barrierMovement = 0.1;
-                    write("level", barrierMovement);
-                    setState(() {});
-                  }, "Hard", Colors.red.shade800),
-                ),
-              ],
-            );
-          }),
+              ),
+              Obx(() => Container(
+                    padding: EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: gameState.level.value == 0.1
+                              ? Colors.black
+                              : Colors.transparent,
+                          width: 2),
+                    ),
+                    child: gameButton(() {
+                      barrierMovement = 0.1;
+                      gameState.level.value = barrierMovement;
+                      write("level", barrierMovement);
+                    }, "Hard", Colors.red.shade800),
+                  )),
+            ],
+          ),
         ],
       ),
     );
