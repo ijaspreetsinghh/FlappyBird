@@ -7,6 +7,7 @@ import 'package:flappy_bird/Layouts/Widgets/widget_music_settings.dart';
 import 'package:flappy_bird/Layouts/Widgets/widget_themes_settings.dart';
 import 'package:flappy_bird/Resources/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../Global/functions.dart';
 
@@ -97,7 +98,7 @@ class _SettingsState extends State<Settings> {
                     alignment: Alignment(-1, 0),
                     child: IconButton(
                       onPressed: () {
-                        Navigator.pop(context);
+                        Get.back();
                       },
                       icon: Icon(
                         Icons.arrow_back_ios_new_rounded,

@@ -2,6 +2,7 @@
 import 'package:flappy_bird/Layouts/Widgets/widget_bird.dart';
 import 'package:flappy_bird/Resources/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
 import 'package:share_plus/share_plus.dart';
@@ -66,7 +67,7 @@ class _StartScreenState extends State<StartScreen> {
                         myText("Super Bird".toUpperCase(), Colors.white, 40)),
               ],
             ),
-            Bird(yAxis, birdWidth, birdHeight),
+            Bird(yAxis.value, birdWidth, birdHeight),
             SizedBox(
               height: 48,
             ),

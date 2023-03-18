@@ -2,6 +2,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flappy_bird/Resources/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../Database/database.dart';
 import 'constant.dart';
 
@@ -48,7 +49,7 @@ BoxDecoration background(String y) {
 
 void init() {
   if (read("score") != null) {
-    topScore = read("score");
+    topScore.value = read("score");
   } else {
     write("score", topScore);
   }
@@ -96,5 +97,12 @@ void navigate(context, navigate) {
     case Str.rateUs:
       Navigator.pushNamed(context, Str.rateUs);
       break;
+  }
+}
+
+hideOverlay() {
+  if (Get.isOverlaysOpen || Get.isDialogOpen! || Get.isSnackbarOpen) {
+    Get.back();
+    Get.closeAllSnackbars();
   }
 }

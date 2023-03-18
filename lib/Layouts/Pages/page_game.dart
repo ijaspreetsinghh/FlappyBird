@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flappy_bird/Layouts/Widgets/widget_bird.dart';
 import 'package:flappy_bird/Layouts/Widgets/widget_barrier.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../Database/database.dart';
 import '../../Global/constant.dart';
@@ -17,40 +18,42 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   Future<bool> canGoBack() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              myText("Exit Game?", Colors.blue[900], 35),
-            ],
+    Get.dialog(
+        Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(16)),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      myText("Exit Game?", Colors.blue[900], 35),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  gameButton(
+                    () {
+                      hideOverlay();
+                      Get.back();
+                    },
+                    "Exit",
+                    Colors.blue.shade300,
+                  ),
+                  gameButton(() {
+                    hideOverlay();
+                  }, "Keep Playing", Colors.green)
+                      .marginOnly(top: 8)
+                ]),
           ),
-          actionsPadding: EdgeInsets.only(right: 8, bottom: 8),
-          content: SizedBox(
-            height: 100,
-            child: Column(children: [
-              gameButton(
-                () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                },
-                "Exit",
-                Colors.blue.shade300,
-              ),
-              gameButton(() {
-                Navigator.pop(context);
-              }, "Keep Playing", Colors.green),
-            ]),
-          ),
-        );
-      },
-    );
+        ),
+        barrierDismissible: false);
 
     return false;
   }
@@ -91,19 +94,17 @@ class _GamePageState extends State<GamePage> {
       onAdShowedFullScreenContent: (RewardedAd ad) =>
           print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (RewardedAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
-        Navigator.pop(context); // dismisses the alert dialog
-        setState(() {
-          gameHasStarted = true;
-          yAxis = 0;
+        hideOverlay(); // dismisses the alert dialog
 
-          time = 0;
+        gameHasStarted.value = true;
+        yAxis.value = 0;
 
-          initialHeight = yAxis;
-          barrierX[0] = 2;
-          barrierX[1] = 3.4;
-          retryLeft--;
-        });
+        time.value = 0;
+
+        initialHeight = yAxis.value;
+        barrierX[0] = 2;
+        barrierX[1] = 3.4;
+        retryLeft--;
 
         startGame();
         ad.dispose();
@@ -131,15 +132,15 @@ class _GamePageState extends State<GamePage> {
   void initState() {
     retryLeft = 3;
     _createRewardedAd();
-    setState(() {
-      yAxis = 0;
-      gameHasStarted = false;
-      time = 0;
-      score = 0;
-      initialHeight = yAxis;
-      barrierX[0] = 2;
-      barrierX[1] = 3.4;
-    });
+
+    yAxis.value = 0;
+    gameHasStarted.value = false;
+    time.value = 0;
+    score.value = 0;
+    initialHeight = yAxis.value;
+    barrierX[0] = 2;
+    barrierX[1] = 3.4;
+
     super.initState();
   }
 
@@ -149,7 +150,7 @@ class _GamePageState extends State<GamePage> {
       onWillPop: () => canGoBack(),
       child: GestureDetector(
         onTap: () {
-          if (gameHasStarted) {
+          if (gameHasStarted.value) {
             jump();
           } else {
             startGame();
@@ -163,21 +164,27 @@ class _GamePageState extends State<GamePage> {
                 decoration: background(Str.image),
                 child: Stack(
                   children: [
-                    Bird(yAxis, birdWidth, birdHeight),
+                    Obx(() => Bird(yAxis.value, birdWidth, birdHeight)),
                     // Tap to play text
-                    Container(
-                      alignment: Alignment(0, -0.3),
-                      child: myText(gameHasStarted ? '' : 'TAP TO START',
-                          Colors.white, 25),
+                    Obx(
+                      () => Container(
+                        alignment: Alignment(0, -0.3),
+                        child: myText(
+                            gameHasStarted.value ? '' : 'TAP TO START',
+                            Colors.white,
+                            25),
+                      ),
                     ),
-                    Barrier(
-                        barrierHeight[0][0], barrierWidth, barrierX[0], true),
-                    Barrier(
-                        barrierHeight[0][1], barrierWidth, barrierX[0], false),
-                    Barrier(
-                        barrierHeight[1][0], barrierWidth, barrierX[1], true),
-                    Barrier(
-                        barrierHeight[1][1], barrierWidth, barrierX[1], false),
+                    Obx(() => Barrier(barrierHeight[0][0], barrierWidth.value,
+                        barrierX[0], true)),
+                    Obx(
+                      () => Barrier(barrierHeight[0][1], barrierWidth.value,
+                          barrierX[0], false),
+                    ),
+                    Obx(() => Barrier(barrierHeight[1][0], barrierWidth.value,
+                        barrierX[1], true)),
+                    Obx(() => Barrier(barrierHeight[1][1], barrierWidth.value,
+                        barrierX[1], false)),
                   ],
                 ),
               ),
@@ -192,18 +199,18 @@ class _GamePageState extends State<GamePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text(
-                          "Score : $score",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontFamily: "DiloWorld"),
-                        ), // Best TEXT
-                        Text("Best : $topScore",
+                        Obx(() => Text(
+                              "Score : ${score.value}",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontFamily: "DiloWorld"),
+                            )), // Best TEXT
+                        Obx(() => Text("Best : ${topScore.value}",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 30,
-                                fontFamily: "DiloWorld")),
+                                fontFamily: "DiloWorld"))),
                       ],
                     ),
                     SizedBox(
@@ -233,55 +240,51 @@ class _GamePageState extends State<GamePage> {
 
   // Jump Function:
   void jump() {
-    setState(() {
-      time = 0;
-      initialHeight = yAxis;
-    });
+    time.value = 0;
+    initialHeight = yAxis.value;
   }
 
   //Start Game Function:
   void startGame() {
-    gameHasStarted = true;
+    gameHasStarted.value = true;
     Timer.periodic(Duration(milliseconds: 35), (timer) {
-      height = gravity * time * time + velocity * time;
-      setState(() {
-        yAxis = initialHeight - height;
-      });
+      height = gravity * time.value * time.value + velocity * time.value;
+
+      yAxis.value = initialHeight - height;
+
       /* <  Barriers Movements  > */
-      setState(() {
-        if (barrierX[0] < screenEnd) {
-          barrierX[0] += screenStart;
-        } else {
-          barrierX[0] -= barrierMovement;
-        }
-      });
-      setState(() {
-        if (barrierX[1] < screenEnd) {
-          barrierX[1] += screenStart;
-        } else {
-          barrierX[1] -= barrierMovement;
-        }
-      });
+
+      if (barrierX[0] < screenEnd) {
+        barrierX[0] += screenStart;
+      } else {
+        barrierX[0] -= barrierMovement;
+      }
+
+      if (barrierX[1] < screenEnd) {
+        barrierX[1] += screenStart;
+      } else {
+        barrierX[1] -= barrierMovement;
+      }
+
       if (birdIsDead()) {
         timer.cancel();
-        _showDialog();
+
+        showGameOverDialog();
       }
-      time += 0.032;
+      time.value += 0.032;
     });
     /* <  Calculate Score  > */
     Timer.periodic(Duration(seconds: 2), (timer) {
       if (birdIsDead()) {
         // Todo : save the top score in the database  <---
-        write("score", topScore);
+        write("score", topScore.value);
         timer.cancel();
         // score = 0;
       } else {
-        setState(() {
-          if (score == topScore) {
-            topScore++;
-          }
-          score++;
-        });
+        if (score.value == topScore.value) {
+          topScore.value++;
+        }
+        score.value++;
       }
     });
   }
@@ -289,16 +292,16 @@ class _GamePageState extends State<GamePage> {
   /// Make sure the [Bird] doesn't go out screen & hit the barrier
   bool birdIsDead() {
     // Screen
-    if (yAxis > 1.26 || yAxis < -1.1) {
+    if (yAxis.value > 1.26 || yAxis.value < -1.1) {
       return true;
     }
 
     /// Barrier hitBox
     for (int i = 0; i < barrierX.length; i++) {
       if (barrierX[i] <= birdWidth &&
-          (barrierX[i] + (barrierWidth)) >= birdWidth &&
-          (yAxis <= -1 + barrierHeight[i][0] ||
-              yAxis + birdHeight >= 1 - barrierHeight[i][1])) {
+          (barrierX[i] + (barrierWidth.value)) >= birdWidth &&
+          (yAxis.value <= -1 + barrierHeight[i][0] ||
+              yAxis.value + birdHeight >= 1 - barrierHeight[i][1])) {
         return true;
       }
     }
@@ -306,57 +309,80 @@ class _GamePageState extends State<GamePage> {
   }
 
   void resetGame() {
-    setState(() {
-      yAxis = 0;
-      gameHasStarted = false;
-      time = 0;
-      score = 0;
-      initialHeight = yAxis;
-      barrierX[0] = 2;
-      barrierX[1] = 3.4;
-    });
-    Navigator.pop(context);
+    hideOverlay();
+    yAxis.value = 0;
+    gameHasStarted.value = false;
+    time.value = 0;
+    score.value = 0;
+    initialHeight = yAxis.value;
+    barrierX[0] = 2;
+    barrierX[1] = 3.4;
   }
 
   void onAdViewClick() {
     _showRewardedAd();
   }
 
-  void _showDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              myText("Game Over", Colors.blue[900], 35),
-            ],
+  void showGameOverDialog() {
+    RxInt delayVal = 2.obs;
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if (delayVal.value > 0) {
+        delayVal.value--;
+      } else {
+        timer.cancel();
+      }
+    });
+
+    Get.dialog(
+        WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: Dialog(
+            backgroundColor: Colors.transparent,
+            child: Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(16)),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        myText("Game Over", Colors.blue[900], 35),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 24,
+                    ),
+                    Column(children: [
+                      Obx(() => delayVal.value > 0
+                          ? gameButton(
+                              () {},
+                              "Restart in ${delayVal.value}",
+                              Colors.grey,
+                            )
+                          : gameButton(
+                              () {
+                                resetGame();
+                              },
+                              'Restart',
+                              Colors.blue.shade300,
+                            )),
+                      retryLeft > 0
+                          ? gameButton(() {
+                              onAdViewClick();
+                            }, "Watch Ad", Colors.green)
+                              .marginOnly(top: 8)
+                          : SizedBox(),
+                    ])
+                  ]),
+            ),
           ),
-          actionsPadding: EdgeInsets.only(right: 8, bottom: 8),
-          content: SizedBox(
-            height: 100,
-            child: Column(children: [
-              gameButton(
-                () {
-                  resetGame();
-                },
-                "Restart",
-                Colors.blue.shade300,
-              ),
-              retryLeft > 0
-                  ? gameButton(() {
-                      onAdViewClick();
-                    }, "View Ad", Colors.green)
-                  : SizedBox(),
-            ]),
-          ),
-        );
-      },
-    );
+        ),
+        useSafeArea: true,
+        barrierDismissible: false);
   }
 }
